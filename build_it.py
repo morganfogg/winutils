@@ -10,6 +10,7 @@ from os import PathLike
 import subprocess
 from argparse import ArgumentParser
 import logging
+import glob
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -39,6 +40,15 @@ def main():
     run(args)
 
 def run(args):
+    #if shutil.which("devenv") is None:
+        #devenv_list = glob.glob(r'C:\Program Files\Microsoft Visual Studio\2022\*\Common7\IDE\devenv.com')
+        #if not devenv_list:
+            #raise AssertionError("Could not find devenv executable (try running this script from Developer Powershell)")
+        #os.environ['PATH'] = os.pathsep.join([
+            #devenv_list[0].rsplit('\\', 1)[0],
+            #os.environ['PATH'],
+        #])
+
     assert Path(r'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.com').exists()
     os.environ['PATH'] = os.pathsep.join([
         r'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE',
@@ -73,7 +83,7 @@ def run(args):
     logging.info(mvn_exe)
 
     logging.info("Building")
-    subprocess.run([mvn_exe, "compile", "--batch-mode", "-e"], cwd=hadoop_dir)
+    subprocess.run([mvn_exe, "compile", "-Dmaven.test.skip", "-DskipTests", "-Dmaven.javadoc.skip=true", "-T", "1C", "--batch-mode", "-e"], cwd=hadoop_dir)
 
 if __name__ == '__main__':
     main()
