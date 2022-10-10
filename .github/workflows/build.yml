@@ -26,6 +26,9 @@ jobs:
           path: ~/.m2
           key: maven
 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
