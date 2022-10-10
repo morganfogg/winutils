@@ -78,6 +78,12 @@ def run(args):
     os.environ['JAVA_HOME'] = str(output_dir / JAVA_DIR_NAME)
     os.environ['MAVEN_HOME'] = str(output_dir / MAVEN_DIR_NAME)
 
+    # MSBuild will (by default, it appears) try to build a 32-bit binary, then fall over with a
+    # cryptic error message since it can't find the 32-bit build chain. This can be changed as a
+    # flag to MSBuild, but using an environmental variable removes the need to modify the Maven
+    # config.
+    os.environ['Platform'] = 'X64'
+
     mvn_exe = str(output_dir / MAVEN_DIR_NAME / "bin/mvn.cmd")
 
     logging.info(mvn_exe)
