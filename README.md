@@ -35,7 +35,7 @@ Now, open "Developer Powershell for VS 2022" from the start menu, and enter the 
 
 ```powershell
 cd ~/winutils-build
-python .\build.py ~\hadoop
+python .\build.py $HOME\hadoop
 ```
 
 Finally, go make some lunch: the build takes some time. When it's done, you will find your winutils
