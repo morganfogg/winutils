@@ -37,6 +37,8 @@ jobs:
       - name: Run the build script
         run: |
           python build.py $HOME/hadoop
+        env:
+          MAVEN_OPTS: "-Dmaven.repo.local=D:/m"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
