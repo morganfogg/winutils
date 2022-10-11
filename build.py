@@ -68,7 +68,7 @@ def run(args):
     hadoop_dir = Path(args.hadoop_dir).absolute()
 
     script_dir = Path(__file__).parent.absolute()
-    output_dir = script_dir / ".spark_deps"
+    output_dir = script_dir / "dependencies"
 
     if output_dir.exists():
         shutil.rmtree(output_dir)
@@ -99,7 +99,6 @@ def run(args):
     logging.info(mvn_exe)
 
     logging.info("Building")
-    # subprocess.run([mvn_exe, "clean"], cwd=hadoop_dir)
     subprocess.run(
         [
             mvn_exe,
@@ -109,19 +108,17 @@ def run(args):
             "-Dmaven.javadoc.skip=true",
             "--batch-mode",
             "-e",
-            "--projects",
-            "hadoop-common-project",
-            "--also-make",
         ],
-        cwd=hadoop_dir,
+        cwd=hadoop_dir / 'hadoop-common-project',
         check=True,
     )
 
-    with ZipFile("results.zip", "w") as f:
-        results_dir = hadoop_dir / "hadoop-common-project/hadoop-common/target/bin"
+    os.mkdir('results')
 
-        for item in results_dir.iterdir():
-            f.write(item, arcname=item.name)
+    results_dir = hadoop_dir / "hadoop-common-project/hadoop-common/target/bin"
+
+    for item in results_dir.iterdir():
+        shutil.copy(item, 'results')
 
 
 if __name__ == "__main__":
