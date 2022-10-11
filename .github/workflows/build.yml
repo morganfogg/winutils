@@ -38,7 +38,9 @@ jobs:
         shell: bash
         run: |
             git config --system core.longpaths true
-            git clone https://github.com/apache/hadoop ~/hadoop --single-branch --branch "$INPUT_HADOOP_BRANCH" --depth=1
+            git clone https://github.com/apache/hadoop ~/hadoop --single-branch --branch "$HADOOP_BRANCH" --depth=1
+        env:
+          HADOOP_BRANCH: ${{ inputs.hadoop_branch }}
 
       # Runs a set of commands using the runners shell
       - name: Run the build script
