@@ -35,7 +35,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Clone Hadoop
-        shell: gitbash.exe
+        shell: bash
         run: |
             git config --system core.longpaths true
             git clone https://github.com/apache/hadoop ~/hadoop --single-branch --branch "$INPUT_HADOOP_BRANCH" --depth=1
