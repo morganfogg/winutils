@@ -15,15 +15,13 @@ import glob
 logging.getLogger().setLevel(logging.INFO)
 
 JAVA_URL = "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u345-b01/OpenJDK8U-jdk_x64_windows_hotspot_8u345b01.zip"
-MAVEN_URL = (
-    "https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip"
-)
+MAVEN_URL = "https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip"
 PROTOBUF_URL = "https://github.com/protocolbuffers/protobuf/releases/download/v2.5.0/protoc-2.5.0-win32.zip"
 CMAKE_URL = "https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-windows-x86_64.zip"
 
 MAVEN_DIR_NAME = "apache-maven-3.8.6"
 JAVA_DIR_NAME = "jdk8u345-b01"
-
+CMAKE_DIR_NAME = 'cmake-3.24.2-windows-x86_64'
 
 def retrieve_zip(source: str, destination: PathLike):
     with TemporaryDirectory() as t:
@@ -65,6 +63,7 @@ def run(args):
     # os.environ['PATH'],
     # ])
 
+
     hadoop_dir = Path(args.hadoop_dir).absolute()
 
     script_dir = Path(__file__).parent.absolute()
@@ -87,6 +86,11 @@ def run(args):
 
     os.environ["JAVA_HOME"] = str(output_dir / JAVA_DIR_NAME)
     os.environ["MAVEN_HOME"] = str(output_dir / MAVEN_DIR_NAME)
+    os.environ['PATH'] = os.pathsep.join([
+        os.environ['PATH'],
+        str(output_dir / "protobuf"),
+        str(output_dir / CMAKE_DIR_NAME / 'bin')
+    ])
 
     # MSBuild will (by default, it appears) try to build a 32-bit binary, then fall over with a
     # cryptic error message since it can't find the 32-bit build chain. This can be changed as a
