@@ -15,21 +15,19 @@ import glob
 logging.getLogger().setLevel(logging.INFO)
 
 JAVA_URL = "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u345-b01/OpenJDK8U-jdk_x64_windows_hotspot_8u345b01.zip"
-MAVEN_URL = "https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip"
+MAVEN_URL = "https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.tar.gz"
 PROTOBUF_URL = "https://github.com/protocolbuffers/protobuf/releases/download/v2.5.0/protoc-2.5.0-win32.zip"
 CMAKE_URL = "https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-windows-x86_64.zip"
 
-MAVEN_DIR_NAME = "apache-maven-3.8.6"
+MAVEN_DIR_NAME = "apache-maven-3.8.7"
 JAVA_DIR_NAME = "jdk8u345-b01"
 CMAKE_DIR_NAME = 'cmake-3.24.2-windows-x86_64'
 
-def retrieve_zip(source: str, destination: PathLike):
+def retrieve_archive(source: str, destination: PathLike):
+    filename = source.rsplit('/', 1)[1]
     with TemporaryDirectory() as t:
-        path = Path(t)
-        urlretrieve(source, filename=path / "file.zip")
-
-        with ZipFile(path / "file.zip", "r") as f:
-            f.extractall(destination)
+        urlretrieve(source, filename=Path(t) / filename)
+        shutil.unpack_archive(Path(t) / filename, destination)
 
 
 def main():
@@ -73,16 +71,16 @@ def run(args):
         shutil.rmtree(output_dir)
 
     logging.info("Retrieving Java")
-    retrieve_zip(JAVA_URL, output_dir)
+    retrieve_archive(JAVA_URL, output_dir)
 
     logging.info("Retrieving Maven")
-    retrieve_zip(MAVEN_URL, output_dir)
+    retrieve_archive(MAVEN_URL, output_dir)
 
     logging.info("Retrieving Protocol Buffers")
-    retrieve_zip(PROTOBUF_URL, output_dir / "protobuf")
+    retrieve_archive(PROTOBUF_URL, output_dir / "protobuf")
 
     logging.info("Retrieving CMAKE")
-    retrieve_zip(CMAKE_URL, output_dir)
+    retrieve_archive(CMAKE_URL, output_dir)
 
     os.environ["JAVA_HOME"] = str(output_dir / JAVA_DIR_NAME)
     os.environ["MAVEN_HOME"] = str(output_dir / MAVEN_DIR_NAME)
