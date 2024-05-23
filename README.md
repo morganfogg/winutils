@@ -51,9 +51,9 @@ python .\build.py $HOME\hadoop
 ```
 
 The build takes some time. When it's done, you will find your winutils build in 
-`~/hadoop/hadoop-common-project/hadoop-common/target/bin/`
+the `results` folder in the the same directory as the script.
 
-**NOTE**: Some (but not all) versions of Hadoop have trouble with passing long Maven paths to java, spitting up an
+**NOTE**: Some (but not all) versions of Hadoop have trouble with passing long Maven paths to Java, spitting up an
 error along the lines of 
 
 ```
